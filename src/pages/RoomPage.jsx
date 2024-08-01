@@ -11,7 +11,7 @@ const RoomPage = () => {
   const navigate = useNavigate();
   const zpRef = useRef(null);
   const videoContainerRef = useRef(null);
-  const [joined, setJoined] = useState(false);
+  // const [joined, setJoined] = useState(false);
   const [callType, setCallType] = useState(""); // State to store the call type
 
   // Initialize ZegoUIKit and join room on component mount
@@ -21,7 +21,7 @@ const RoomPage = () => {
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId, Date.now().toString(), "Your Name");
 
     const zp = ZegoUIKitPrebuilt.create(kitToken);
-    console.log(typeof appID, serverSecret, roomId);
+
     zpRef.current = zp;
 
     zp.joinRoom({
@@ -37,7 +37,7 @@ const RoomPage = () => {
       },
       maxUsers: type === "one-on-one" ? 2 : 10,
       onJoinRoom: () => {
-        setJoined(true);
+        // setJoined(true);
       },
       onLeaveRoom: () => {
         navigate("/");
@@ -46,19 +46,19 @@ const RoomPage = () => {
   };
 
   // Handle exit from the room
-  const handleExit = () => {
-    if (zpRef.current) {
-      zpRef.current.destroy();
-    }
-    navigate("/");
-  };
+  // const handleExit = () => {
+  //   if (zpRef.current) {
+  //     zpRef.current.destroy();
+  //   }
+  //   navigate("/");
+  // };
 
   // On component mount, extract call type from location and initialize meeting
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const type = query.get("type");
 
-    setCallType(type); // Update state with call type
+    if (type === "one-on-one") setCallType(type); // Update state with call type
   }, [location.search]);
 
   // Initialize meeting after callType state is set
@@ -77,14 +77,14 @@ const RoomPage = () => {
 
   return (
     <div className="room-container">
-      {!joined && (
+      {/* {!joined && (
         <>
           <header className="room-header">{callType === "one-on-one" ? "One-on-One Video Call" : "Group Video Call"}</header>
           <button className="exit-button" onClick={handleExit}>
             Exit
           </button>
         </>
-      )}
+      )} */}
       <div ref={videoContainerRef} className="video-container" />
     </div>
   );
